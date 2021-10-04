@@ -69,7 +69,6 @@ int main() {
         finish = omp_get_wtime();  
         fprintf(stdout,"%s\n",output);
         fprintf(stderr,"%lu %lf\n",n,finish-start);
-        // teste
     }
     return 0;
 }
