@@ -70,5 +70,6 @@ int main() {
         fprintf(stdout,"%s\n",output);
         fprintf(stderr,"%lu %lf\n",n,finish-start);
     }
+    // testando 
     return 0;
 }
