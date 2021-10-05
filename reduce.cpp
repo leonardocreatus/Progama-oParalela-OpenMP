@@ -19,7 +19,6 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
 
     //! Número de threads que estão em execução    
     int num_threads = omp_get_max_threads();
-    // printf("%d", num_threads);
     long unsigned int aux[num_threads][d + 11];
 
     for (digit = 0; digit < d + 11; ++digit) {
