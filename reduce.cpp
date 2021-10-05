@@ -16,32 +16,36 @@
 void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digit, i, remainder, div, mod, th;
     long unsigned int digits[d + 11];
-    long unsigned int aux[omp_get_num_threads()][d + 11];
 
-    // #pragma omp parallel for
+    //! Número de threads que estão em execução    
+    const num_threads = omp_get_max_threads();
+    long unsigned int aux[num_threads][d + 11];
+
+    
     for (digit = 0; digit < d + 11; ++digit) {
         digits[digit] = 0;
-        for( th = 0 ; th < omp_get_num_threads(); ++th ){
+        for( th = 0 ; th < num_threads; ++th ){
             aux[th][digit] = 0;
         }   
     }
-    // long unsigned int digits[d + 11][num_thread];
+    
     #pragma omp parallel for private(digit, div, mod, remainder)
     for (i = 1; i <= n; ++i) {
         remainder = 1;
         for (digit = 0; digit < d + 11 && remainder; ++digit) {
             div = remainder / i;
             mod = remainder % i;
-            printf("%d", omp_get_thread_num());
             aux[omp_get_thread_num()][digit] += div;
             remainder = mod * 10;
         }
     }
 
-    // #pragma omp parallel for
-    // for(digit = 0; digit < d + 11; ++digit){
-    //     // digits[digit] += aux[omp_get_thread_num()][digit];
-    // }
+    #pragma omp parallel for
+    for(digit = 0; digit < d + 11; ++digit){
+        for(th = 0; th <num_threads; ++th){
+            digits[digit] += aux[th][digit];
+        }
+    }
 
     // Não dá para criar paralelismo, pois as execuções possuem dependências diretas entre si
     for (i = d + 11 - 1; i > 0; --i) {
