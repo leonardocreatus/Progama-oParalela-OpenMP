@@ -18,7 +18,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digits[d + 11];
 
     //! Número de threads que estão em execução    
-    const num_threads = omp_get_max_threads();
+    int num_threads = omp_get_max_threads();
     long unsigned int aux[num_threads][d + 11];
 
     
