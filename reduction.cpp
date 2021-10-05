@@ -24,8 +24,9 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     {
         int ithread = omp_get_thread_num();
 
-        remainder = 1;
+        
         for(i = 1; i <= n; ++i){
+            remainder = 1;
             for(digit = 0; digit < d + 11 && remainder; ++digit){
                 if(i == 1) aux[ithread][digit] = 0;
 
