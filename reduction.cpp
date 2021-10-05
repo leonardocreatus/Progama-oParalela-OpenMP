@@ -23,19 +23,21 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     #pragma omp parallel private(remainder, digit, div, mod, i)
     {
         int ithread = omp_get_thread_num();
-
+        int nthread = omp_get_num_threads();
         
-        for(i = 1; i <= n; ++i){
-            remainder = 1;
-            for(digit = 0; digit < d + 11 && remainder; ++digit){
-                if(i == 1) aux[ithread][digit] = 0;
+        remainder = 1;
+        long unsigned int start = (ithread * (d + 11)) / nthread;
+        long unsigned int end = ((ithread + 1) * (d + 11)) / nthread;
 
-                div = remainder / i;
-                mod = remainder % i;
-                aux[ithread][digit] += div;
-                remainder = mod * 10;
-            }
+        for(digit = start; digit < end && remainder; ++digit){
+            if(i == 1) aux[ithread][digit] = 0;
+
+            div = remainder / i;
+            mod = remainder % i;
+            aux[ithread][digit] += div;
+            remainder = mod * 10;
         }
+        
 
     }
     // for (digit = 0; digit < d + 11; ++digit) {
