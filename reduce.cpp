@@ -16,7 +16,7 @@
 void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digit, i, remainder, div, mod, th;
     long unsigned int digits[d + 11];
-    long unsigned int aux[d + 11][omp_get_num_threads()];
+    long unsigned int aux[omp_get_num_threads()][d + 11];
 
     // #pragma omp parallel for
     for (digit = 0; digit < d + 11; ++digit) {
@@ -29,17 +29,15 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         for (digit = 0; digit < d + 11 && remainder; ++digit) {
             div = remainder / i;
             mod = remainder % i;
-            // #pragma omp atomic
-            // digits[digit] += div;
-            aux[digit][omp_get_thread_num()] += div;
+            aux[omp_get_thread_num()][digit] += div;
             remainder = mod * 10;
         }
     }
 
     #pragma omp parallel for private(th)
     for(digit = 0; digit < d + 11; ++digit){
-        for( th = 0 ; th < omp_get_thread_num(); ++th ){
-            digits[digit] += aux[digit][th];
+        for( th = 0 ; th < omp_get_num_threads(); ++th ){
+            digits[digit] += aux[th][digit];
         }
     }
 
