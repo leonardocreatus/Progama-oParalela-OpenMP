@@ -20,7 +20,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int aux[num_threads][d + 11];
     
 
-    #pragma omp parallel private(remainder, digit, div, mod)
+    #pragma omp parallel private(remainder, digit, div, mod, i)
     {
         int ithread = omp_get_thread_num();
 
@@ -33,7 +33,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
                 mod = remainder % i;
                 aux[ithread][digit] += div;
                 remainder = mod * 10;
-        }
+            }
         }
 
     }
