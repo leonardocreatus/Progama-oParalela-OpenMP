@@ -26,8 +26,10 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
 
         remainder = 1;
         for(digit = 0; digit < d + 11 && remainder; ++digit){
-            aux[ithread][digit] = 0;
-            digits[digit] = 0;
+            if(digit == 0){
+                aux[ithread][digit] = 0;
+                digits[digit] = 0;
+            }
 
             div = remainder / i;
             mod = remainder % i;
