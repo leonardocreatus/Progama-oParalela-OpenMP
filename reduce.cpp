@@ -19,9 +19,9 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
 
     //! Número de threads que estão em execução    
     int num_threads = omp_get_max_threads();
+    // printf("%d", num_threads);
     long unsigned int aux[num_threads][d + 11];
 
-    
     for (digit = 0; digit < d + 11; ++digit) {
         digits[digit] = 0;
         for( th = 0 ; th < num_threads; ++th ){
@@ -40,7 +40,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         }
     }
 
-    #pragma omp parallel for
+    #pragma omp parallel for private(th)
     for(digit = 0; digit < d + 11; ++digit){
         for(th = 0; th <num_threads; ++th){
             digits[digit] += aux[th][digit];
