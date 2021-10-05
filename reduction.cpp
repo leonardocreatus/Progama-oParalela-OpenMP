@@ -16,10 +16,10 @@
 void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digit, i, remainder, div, mod, th;
     long unsigned int digits[d + 11];
-    long unsigned int aux[num_threads][d + 11];
-
     int num_threads = omp_get_max_threads();
+    long unsigned int aux[num_threads][d + 11];
     
+
     #pragma omp parallel private(remainder, digit, div, mod)
     {
         int ithread = omp_get_thread_num();
