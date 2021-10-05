@@ -25,16 +25,15 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         int ithread = omp_get_thread_num();
 
         remainder = 1;
-        for(digit = 0; digit < d + 11 && remainder; ++digit){
-            if(digit == 0){
-                aux[ithread][digit] = 0;
-                digits[digit] = 0;
-            }
+        for(i = 1; i <= n; ++i){
+            for(digit = 0; digit < d + 11 && remainder; ++digit){
+                if(i == 1) aux[ithread][digit] = 0;
 
-            div = remainder / i;
-            mod = remainder % i;
-            aux[ithread][digit] += div;
-            remainder = mod * 10;
+                div = remainder / i;
+                mod = remainder % i;
+                aux[ithread][digit] += div;
+                remainder = mod * 10;
+        }
         }
 
     }
@@ -58,6 +57,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
 
     #pragma omp parallel for private(th)
     for(digit = 0; digit < d + 11; ++digit){
+        digits[digit] = 0;
         for(th = 0; th <num_threads; ++th){
             digits[digit] += aux[th][digit];
         }
