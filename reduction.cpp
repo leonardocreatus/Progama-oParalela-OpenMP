@@ -15,31 +15,29 @@
 
 void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digit, i, remainder, div, mod, th;
-    long unsigned int digits[d + 11];
+    long unsigned int digits[d + 11] = {0};
     int num_threads = omp_get_max_threads();
-    long unsigned int aux[num_threads][d + 11];
+    long unsigned int aux[num_threads][d + 11] = {0};
     
 
-    #pragma omp parallel private(remainder, digit, div, mod, i)
-    {
-        int ithread = omp_get_thread_num();
-        int nthread = omp_get_num_threads();
+    // #pragma omp parallel private(remainder, digit, div, mod, i)
+    // {
+    //     int ithread = omp_get_thread_num();
+    //     int nthread = omp_get_num_threads();
         
-        remainder = 1;
-        long unsigned int start = (ithread * (d + 11)) / nthread;
-        long unsigned int end = ((ithread + 1) * (d + 11)) / nthread;
-
-        for(digit = start; digit < end && remainder; ++digit){
-            if(i == 1) aux[ithread][digit] = 0;
-
-            div = remainder / i;
-            mod = remainder % i;
-            aux[ithread][digit] += div;
-            remainder = mod * 10;
-        }
-        
-
-    }
+    //     long unsigned int start = (ithread * n) / nthread;
+    //     long unsigned int end = ((ithread + 1) * n) / nthread;
+ 
+    //     for(i = start; i < end; ++i){
+    //         remainder = 1;
+    //         for (digit = 0; digit < d + 11 && remainder; ++digit) {
+    //             div = remainder / i;
+    //             mod = remainder % i;
+    //             aux[ithread][digit] += div;
+    //             remainder = mod * 10;
+    //         }
+    //     }
+    // }
     // for (digit = 0; digit < d + 11; ++digit) {
     //     digits[digit] = 0;
     //     for( th = 0 ; th < num_threads; ++th ){
@@ -47,20 +45,19 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     //     }   
     // }
     
-    // #pragma omp parallel for private(digit, div, mod, remainder)
-    // for (i = 1; i <= n; ++i) {
-    //     remainder = 1;
-    //     for (digit = 0; digit < d + 11 && remainder; ++digit) {
-    //         div = remainder / i;
-    //         mod = remainder % i;
-    //         aux[omp_get_thread_num()][digit] += div;
-    //         remainder = mod * 10;
-    //     }
-    // }
+    #pragma omp parallel for private(digit, div, mod, remainder)
+    for (i = 1; i <= n; ++i) {
+        remainder = 1;
+        for (digit = 0; digit < d + 11 && remainder; ++digit) {
+            div = remainder / i;
+            mod = remainder % i;
+            aux[omp_get_thread_num()][digit] += div;
+            remainder = mod * 10;
+        }
+    }
 
     #pragma omp parallel for private(th)
     for(digit = 0; digit < d + 11; ++digit){
-        digits[digit] = 0;
         for(th = 0; th <num_threads; ++th){
             digits[digit] += aux[th][digit];
         }
