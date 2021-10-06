@@ -18,6 +18,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     long unsigned int digits[d + 11];
     int num_threads = omp_get_max_threads();
     long unsigned int aux[num_threads][d + 11];
+    int j;
     
 
     #pragma omp parallel private(digit, div, mod, i)
@@ -25,6 +26,15 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         int ithread = omp_get_thread_num();
         int nthread = omp_get_num_threads();
         long unsigned int remainder = 1;
+
+        long unsigned int _start = ((ithread * (d + 11)) / nthread);
+        long unsigned int _end = (((ithread + 1) * (d+11)) / nthread);  
+
+        for(digit = _start; digit < _end; ++digit){
+            digits[digit] = 0;
+            for(j = 0; j < nthread; j++) aux[j][digit] = 0;
+        }
+
         long unsigned int start = ((ithread * n) / nthread) + 1;
         long unsigned int end = (((ithread + 1) * n) / nthread) + 1; 
  
@@ -41,9 +51,9 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
 
     #pragma omp parallel for private(th)
     for(digit = 0; digit < d + 11; ++digit){
-        // for(th = 0; th <num_threads; ++th){
-            // digits[digit] += aux[th][digit];
-        // }
+        for(th = 0; th <num_threads; ++th){
+            digits[digit] += aux[th][digit];
+        }
     }
 
     // Não dá para criar paralelismo, pois as execuções possuem dependências diretas entre si
