@@ -56,7 +56,7 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         }
     }
 
-    // Não dá para criar paralelismo, pois as execuções possuem dependências diretas entre si
+
     for (i = d + 11 - 1; i > 0; --i) {
         digits[i - 1] += digits[i] / 10;
         digits[i] %= 10;
@@ -66,7 +66,6 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
         ++digits[d];
     }
 
-    // Não dá para criar paralelismo, pois as execuções possuem dependências diretas entre si
     for (i = d; i > 0; --i) {
         digits[i - 1] += digits[i] / 10;
         digits[i] %= 10;
@@ -75,7 +74,6 @@ void sum(char* output, const long unsigned int d, const long unsigned int n) {
     sprintf(output,"%lu.",digits[0]);
     unsigned long int t = strlen(output);
     
-    // Não vale a pena criar paralelismo dado o custo para criar as threads e que deverá ser incrementado a variável T para cada execução
     for (i = 1; i <= d; ++i)
         output[t++] = digits[i]+'0';
 
